@@ -34,7 +34,8 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "<h1>Wiki Not Found</h1>")
 		return
 	}
-	fmt.Fprintf(w, "<h1>%s</h1><div>%s</div>", p.Title, p.Body)
+	t, _ := template.ParseFiles("view.html")
+	t.Execute(w, p)
 }
 
 func editHandler(w http.ResponseWriter, r *http.Request) {
