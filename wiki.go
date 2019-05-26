@@ -27,6 +27,11 @@ func loadPage(title string) (*Page, error) {
 	return &Page{Title: title, Body: body}, nil
 }
 
+func renderTemplate(w http.ResponseWriter, name string, page *Page) {
+	t, _ := template.ParseFiles(name + ".html")
+	t.Execute(w, page)
+}
+
 func viewHandler(w http.ResponseWriter, r *http.Request) {
 	title := r.URL.Path[len("/view/"):]
 	p, err := loadPage(title)
@@ -34,18 +39,16 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "<h1>Wiki Not Found</h1>")
 		return
 	}
-	t, _ := template.ParseFiles("view.html")
-	t.Execute(w, p)
+	renderTemplate(w, "view", p)
 }
 
 func editHandler(w http.ResponseWriter, r *http.Request) {
-	title := r.URL.Path[len("/view/"):]
+	title := r.URL.Path[len("/edit/"):]
 	p, err := loadPage(title)
 	if err != nil {
 		p = &Page{Title: title}
 	}
-	t, _ := template.ParseFiles("edit.html")
-	t.Execute(w, p)
+	renderTemplate(w, "edit", p)
 }
 
 func main() {
