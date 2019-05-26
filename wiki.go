@@ -13,9 +13,9 @@ type Page struct {
 	Body  []byte
 }
 
-func (p *Page) save() error {
-	filename := p.Title + ".txt"
-	return ioutil.WriteFile(filename, p.Body, 0600)
+func (page *Page) save() error {
+	filename := page.Title + ".txt"
+	return ioutil.WriteFile(filename, page.Body, 0600)
 }
 
 func loadPage(title string) (*Page, error) {
@@ -34,21 +34,21 @@ func renderTemplate(w http.ResponseWriter, name string, page *Page) {
 
 func viewHandler(w http.ResponseWriter, r *http.Request) {
 	title := r.URL.Path[len("/view/"):]
-	p, err := loadPage(title)
+	page, err := loadPage(title)
 	if err != nil {
 		fmt.Fprintf(w, "<h1>Wiki Not Found</h1>")
 		return
 	}
-	renderTemplate(w, "view", p)
+	renderTemplate(w, "view", page)
 }
 
 func editHandler(w http.ResponseWriter, r *http.Request) {
 	title := r.URL.Path[len("/edit/"):]
-	p, err := loadPage(title)
+	page, err := loadPage(title)
 	if err != nil {
-		p = &Page{Title: title}
+		page = &Page{Title: title}
 	}
-	renderTemplate(w, "edit", p)
+	renderTemplate(w, "edit", page)
 }
 
 func main() {
