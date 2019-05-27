@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -36,7 +35,7 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 	title := r.URL.Path[len("/view/"):]
 	page, err := loadPage(title)
 	if err != nil {
-		fmt.Fprintf(w, "<h1>Wiki Not Found</h1>")
+		http.Redirect(w, r, "/edit/" + title, http.StatusFound)
 		return
 	}
 	renderTemplate(w, "view", page)
